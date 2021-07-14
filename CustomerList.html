@@ -55,8 +55,8 @@
                 counterForLondon++;
             }
             counter++;
-            var newPhone = item.address?.phone.replaceAll(' ','').replaceAll('(','').replaceAll(')','').replaceAll('-','').replaceAll('.','');
-            $('tbody').append('<tr style="color: '+ color +'">' +
+            var newPhone = item.address?.phone.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', '').replaceAll('-', '').replaceAll('.', '');
+            $('tbody').append('<tr style="color: ' + color + '">' +
                 '<td>' + item.id + '</td>' +
                 '<td>' + item.companyName.toUpperCase() + '</td>' +
                 '<td>' + item.contactName + '</td>' +
@@ -64,7 +64,8 @@
                 '<td>' + item.address.street + '</td>' +
                 '<td>' + item.address.city + '</td>' +
                 '<td>' + newPhone + '</td>' +
-                '</tr>')})
+                '</tr>')
+        })
         $('#count').html('Total number of customers = ' + counter);
         console.log(counterForLondon);
     })
