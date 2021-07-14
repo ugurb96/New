@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+</head>
+
+<body>
+
+    <div class="jumbotron">
+        <h1>Customer Page</h1>
+    </div>
+
+    <div class="container">
+        <div>
+            <span>Name:</span>
+            <input type="text" name="" id="findData">
+            <button class="btn btn-primary" id='findButton'>Find</button>
+
+            <span>Result: </span>
+            <span style="color: tomato;" id='result'></span>
+        </div>
+
+
+        <div>
+            <span>Display: </span>
+            <select name="display" id="">
+                <option value="5">5</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Company Name</th>
+                    <th scope="col">Contact Name</th>
+                    <th scope="col">Contact Title</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
+<script>
+
+
+
+    let apiurl = 'https://northwind.vercel.app/api/customers';
+    let customers = [];
+
+
+    fetch(apiurl)
+        .then((res) => res.json())
+        .then((data) => {
+
+            customers = data;
+            // customers = _.orderBy(customers, ['companyName'],['desc']);
+            let displayData = customers.slice(0, 5);
+            appendTable(displayData);
+        });
+
+    $('select').change(function () {
+        let displayCount = $(this).val();
+        let displayData = customers.slice(0, displayCount);
+        appendTable(displayData)
+    })
+
+    function appendTable(data) {
+        $('tbody tr').remove();
+        data.map((item) => {
+            $('tbody').append(
+                '<tr>' +
+                '<td>' + item.id + '</td>' +
+                '<td>' + item.companyName + '</td>' +
+                '<td>' + item.contactName + '</td>' +
+                '<td>' + item.contactTitle + '</td>' +
+                '<td>' + '<button id="' + item.id + '" class="btn btn-danger"> Delete </button>' + '</td>' +
+                '</tr>'
+            )
+        })
+    }
+
+
+    $(document).on('click', 'button', function () {
+
+        //öncelikle hangi data silinecekse onun id sini alıyorum
+        let customerId = $(this).attr('id');
+
+        //1. yol fetch ile servise delete işlemi yapıyorum (POST, GET, DELETE, PUT)
+
+        // let requestOptions = {
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     method: "DELETE",
+        // }
+
+        // fetch(apiurl + '/' + productId, requestOptions)
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         console.log('Success!');
+        //         $(this).parent().parent().fadeOut();
+
+        //     })
+        //     .catch((err) => {
+        //         alert(err)
+        //     })
+
+        // 2. yol jquery ajax ile delete işlemi yapıyorum
+
+        let button = this;
+
+        $.ajax({
+            url: apiurl + '/' + customerId,
+            type: 'DELETE',
+            success: function () {
+                console.log('Success!');
+                $(button).parent().parent().fadeOut();
+            }
+        })
+        //REQUEST <=> RESPONSE
+    })
+
+    $(document).on('click', '#findButton', function () {
+        //butona tıkladığında öncelikle aramak istediği value yakalarım
+        let companyName = $('#findData').val();
+        //Daha sonra products dizisindeki elemanlarda bu name control edilir. Varsa spana yazılır yoksa spana 'Sonuç bulunamadı!' yazılır
+        // let product = products.find(q => q.name.toLowerCase() == productName.toLowerCase());
+        let customer = _.find(customers, ['name', companyName]);
+        if (customer === undefined) {
+            $('#result').html('Sonuç bulunamadı!!')
+        }
+        else {
+            $('#result').html('id: ' + product.id + ' name: ' + product.name + ' unitPrice: ' + product.unitPrice);
+            let newCustomers = [];
+            newCustomers.push(customer);
+            appendTable(newCustomers)
+        }
+    })
+</script>

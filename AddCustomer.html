@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    
+    </head>
+    
+    <body>
+        <div class="jumbotron">
+            <h1>Add Customer</h1>
+        </div>
+    
+        <div class="container">
+            <div class="form-group">
+                <label>Company Name:</label>
+                <input type="text" class="form-control" id="compName" a placeholder="Enter company name">
+            </div>
+            <div class="form-group">
+                <label>Contact Name</label>
+                <input type="text" class="form-control" id="contName" placeholder="Enter contact name">
+            </div>
+            <div class="form-group">
+                <label>Contact Title</label>
+                <input type="text" class="form-control" id="contTitle" placeholder="Enter contact title">
+            </div>
+            <button class="btn btn-primary" id='add'>Add</button>
+            <a href="./Customers.html">Customer List Page</a>
+        </div>   
+    </body>
+    
+    </html>
+    <script>  
+        $('#add').click(function () {   
+            let newCustomer = new Object();
+            newCustomer.companyName = $('#compName').val();
+            newCustomer.contactName = $('#contName').val();
+            newCustomer.contactTitle = $('#contTitle').val();
+    
+            $.ajax({
+                url: 'https://northwind.vercel.app/api/customers',
+                type: 'POST',
+                data: newCustomer,
+                success: function (data) {    
+                    alert('İşlem başarılı!!')   
+                }
+            })    
+        })    
+    </script>

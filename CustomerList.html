@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+</head>
+
+<body>
+    <div class="jumbotron" style="text-align: center;">
+        <h1>Customer List</h1>
+    </div>
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Company Name</th>
+                    <th scope="col">Contact Name</th>
+                    <th scope="col">Contact Title</th>
+                    <th scope="col">Street</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                <span id="count" style="color: red;">Result</span>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
+
+<script>
+    let counter = 0;
+    let counterForLondon = 0;
+    fetch('https://northwind.vercel.app/api/customers').then(res => res.json()).then(data => {
+        $('tbody tr').remove();
+        data = _.orderBy(data, ['companyName'], ['desc']);
+        // var newData = data.map(item=>item.address);
+        data.map(item => {
+            var color = 'black';
+            if (item.address?.city === 'London') {
+                color = 'tomato';
+            }
+            if (item.address.city === 'London') {
+                counterForLondon++;
+            }
+            counter++;
+            var newPhone = item.address?.phone.replaceAll(' ','').replaceAll('(','').replaceAll(')','').replaceAll('-','').replaceAll('.','');
+            $('tbody').append('<tr style="color: '+ color +'">' +
+                '<td>' + item.id + '</td>' +
+                '<td>' + item.companyName.toUpperCase() + '</td>' +
+                '<td>' + item.contactName + '</td>' +
+                '<td>' + item.contactTitle + '</td>' +
+                '<td>' + item.address.street + '</td>' +
+                '<td>' + item.address.city + '</td>' +
+                '<td>' + newPhone + '</td>' +
+                '</tr>')})
+        $('#count').html('Total number of customers = ' + counter);
+        console.log(counterForLondon);
+    })
+</script>
